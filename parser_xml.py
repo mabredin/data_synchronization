@@ -32,6 +32,9 @@ class Employee:
 
     def _get_right_param(self, param: str) -> Optional[str]:
         return self.empl_code if param == 'empl_code' else self.fl
+    
+    def _set_login(self, login: str) -> None:
+        self.login = login
 
 
 class ParserXML:
