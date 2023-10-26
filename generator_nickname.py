@@ -1,4 +1,4 @@
-from typing import Iterable, Optional
+from parser_xml import Employee
 
 
 transliterate_list = {
@@ -28,50 +28,34 @@ transliterate_list = {
     'Э': 'E', 'Ю': 'Iu', 'Я': 'Ia'
 }
 
-# test list of nicknames
-existing_nicknames = [
-    'm_bredin', 's_abdullov', 's_rudikov',
-    'v_pankin', 'i_abaturov', 'k_abaturov',
-    'd_ivanov', 'alv_ivanov', 'iu_ivanov',
-    'av_ivanov', 'ivanovvv', 'iv_ivanov',
-    'i_ivanov', 'ivanovlv', 'o_ivanov'
-]
-
-# test tuple of new employees
-new_employees = (
-    'Бредин Максим Андреевич', 'Абатуров Кирилл Леонидович',
-    'Иванов Андрей Владимирович', 'Иванов Алексей Алексеевич',
-    'Шутько Константин Иванович', 'Иванов Алексей Алексеевич',
-    'Бредин Игорь Андреевич', 'Бредина Ангелина Борисовна'
-)
-
 
 class GeneratorNickname:
     def __init__(
             self,
             existing_nicknames: list[str] = [],
-            new_employees: Iterable[str] = []
+            new_employees: list[Employee] = []
         ) -> None:
         self.existing_nicknames = existing_nicknames
         self.new_employees = new_employees
 
-    def generate_list_original_nicknames(self) -> Optional[list[str]]:
+    def generate_original_nicknames(self) -> None:
         if self._check_attributes:
-            return [self._generate_original_nickname(emp) for emp in self.new_employees]
-        return None
+            for employee in self.new_employees:
+                login = self._generate_original_nickname(employee)
+                employee._set_login(login)
 
     def _check_attributes(self) -> bool:
         if self.existing_nicknames and self.new_employees:
             return True
         return False
     
-    def _generate_original_nickname(self, name: str) -> str:
-        user_info = self._split_fullname(name)
+    def _generate_original_nickname(self, employee: Employee) -> str:
+        user_info = self._split_fullname(employee)
         new_nickname = self._generate_and_check_nickname(user_info)
         return new_nickname
 
-    def _split_fullname(self, name: str) -> dict[str, str]:
-        surname, firstname, patronymic = name.lower().strip().split()
+    def _split_fullname(self, employee: Employee) -> dict[str, str]:
+        surname, firstname, patronymic = employee.fio.lower().strip().split()
         user_info = {
             'surname': self._transliterate(surname),
             'firstname': self._transliterate(firstname),
@@ -110,9 +94,4 @@ class GeneratorNickname:
 
     def _get_list_of_existing_nicknames(self) -> list[str]:
         return self.existing_nicknames
-
-
-if __name__ == '__main__':
-    example = GeneratorNickname(existing_nicknames, new_employees)
-    print(example.generate_list_original_nicknames())
     
