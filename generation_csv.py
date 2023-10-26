@@ -4,6 +4,13 @@ from typing import Any
 from parser_xml import ParserXML
 
 
+"""
+Данный модуль устарел и не используется из-за временного решения
+не заносить данные в AD.
+Модуль не удаляется, т.к. возможен пересмотр решения.
+"""
+
+
 def write_in_file(employees: dict[str, dict]) -> None:
     with open('daily_report.csv', 'w', newline='') as csvfile:
         spamwriter = writer(csvfile, delimiter=';')
